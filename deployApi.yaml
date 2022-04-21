@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apimodulo
+  labels:
+    app: apimodulo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apimodulo
+  template:
+    metadata:
+      labels:
+        app: apimodulo
+    spec:
+      containers:
+        - name: apimodulo
+          image: alanx30/ecommercemodulo_apinode:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: HOSTRABBITMQ
+              value: amqp://rabbit-0.rabbit
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: api
+spec:
+  ports:
+  - port: 8080
+    name: api
+  selector:
+    app: apimodulo
